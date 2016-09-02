@@ -1,6 +1,6 @@
 # Cite Extension 
 
-## Join the project at Collaborizm!
+**Join the project at Collaborizm!**
 
 https://www.collaborizm.com/project/273~
 
