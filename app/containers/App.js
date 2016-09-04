@@ -26,6 +26,10 @@ export default class App extends Component {
     actions: PropTypes.object.isRequired
   };
 
+  doStuffWithDom = (domContent) => {
+    this.log('I received the following DOM content:\n' + domContent);
+  };
+
   log(object) {
     console.log('log', object);
     chrome.extension.getBackgroundPage().console.log(object);
@@ -34,39 +38,24 @@ export default class App extends Component {
 
   doStuff = ()=> {
     try {
-
-      chrome.windows.getAll({populate: true}, (windows) => {
-        windows.forEach((window)=> {
-          window.tabs.forEach((tab)=> {
-            //collect all of the urls here, I will just log them instead
-            this.log(tab.url);
-          });
-        });
-      });
-
+      this.log('ta', {x: 2});
       this.setState(oldState=> ({x: oldState.x + 1}));
-      this.log('DO STUFFxxuxx', chrome.tabs);
+
 
       chrome.tabs.query({currentWindow: true, active: true}, (tabs)=> {
         this.log(tabs[0].url);
+        this.log(tabs[0]);
+
+        this.log('sending message', tabs[0].id);
+        chrome.tabs.sendMessage(tabs[0].id, {text: 'report_back'}, this.doStuffWithDom);
+
       });
 
-      chrome.tabs.query({currentWindow: true, active: true}, (tabs)=> {
-        this.log('tt', tabs);
-      });
-
-      chrome.tabs.query({}, (tabs)=> {
-        this.log('aallelle', tabs, tabs.length);
-      });
-
-      chrome.tabs.getCurrent(tab=> {
-        this.log('tab', tab);
-        this.setState({tab: JSON.stringify(tab)});
-      });
     } catch (err) {
       console.error(err);
     }
   };
+
 
   render() {
     const {todos, actions} = this.props;
