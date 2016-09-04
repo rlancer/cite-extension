@@ -34,11 +34,29 @@ export default class App extends Component {
 
   doStuff = ()=> {
     try {
+
+      chrome.windows.getAll({populate: true}, (windows) => {
+        windows.forEach((window)=> {
+          window.tabs.forEach((tab)=> {
+            //collect all of the urls here, I will just log them instead
+            this.log(tab.url);
+          });
+        });
+      });
+
       this.setState(oldState=> ({x: oldState.x + 1}));
       this.log('DO STUFFxxuxx', chrome.tabs);
 
       chrome.tabs.query({currentWindow: true, active: true}, (tabs)=> {
         this.log(tabs[0].url);
+      });
+
+      chrome.tabs.query({currentWindow: true, active: true}, (tabs)=> {
+        this.log('tt', tabs);
+      });
+
+      chrome.tabs.query({}, (tabs)=> {
+        this.log('aallelle', tabs, tabs.length);
       });
 
       chrome.tabs.getCurrent(tab=> {
