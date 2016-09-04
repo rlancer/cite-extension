@@ -27,7 +27,18 @@ export default class App extends Component {
   };
 
   doStuffWithDom = (domContent) => {
-    this.log('I received the following DOM content:\n' + domContent);
+    this.log('I received the following DOM conte\n' + domContent);
+
+    var htmlparser = require("htmlparser2");
+    var parser = new htmlparser.Parser({
+      onopentag: function (name, attribs) {
+        if (name === "meta") {
+          console.log('meta!!!', name, attribs);
+        }
+      }
+    }, {decodeEntities: true});
+    parser.write(domContent);
+    parser.end();
   };
 
   log(object) {
@@ -62,7 +73,6 @@ export default class App extends Component {
 
     return (
       <div style={{backgroundColor: 'red', height: '20rem'}}>
-
         <div style={{padding: '2rem', backgroundColor: 'pink', cursor: 'pointer', color: 'white'}}
              onClick={this.doStuff}>DO STUFF
         </div>
