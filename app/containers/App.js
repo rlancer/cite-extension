@@ -1,10 +1,10 @@
 import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import Header from '../components/Header';
-import MainSection from '../components/MainSection';
 import * as TodoActions from '../actions/todos';
 import style from './App.css';
+import htmlparser2 from 'htmlparser2';
+import Quotes from './Quotes';
 
 @connect(
   state => ({
@@ -22,21 +22,22 @@ export default class App extends Component {
   }
 
   static propTypes = {
-    todos: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired
   };
 
   doStuffWithDom = (domContent) => {
-    this.log('I received the following DOM conte\n' + domContent);
 
-    var htmlparser = require("htmlparser2");
-    var parser = new htmlparser.Parser({
-      onopentag: function (name, attribs) {
-        if (name === "meta") {
-          console.log('meta!!!', name, attribs);
-        }
-      }
-    }, {decodeEntities: true});
+    const atts = {};
+
+    const parser = new htmlparser2.Parser({
+        onopentag: (name, attribs) => {
+          if (name === "meta")
+            if (attribs.name || attribs.property)
+              atts[attribs.name || attribs.property] = attribs.content;
+        },
+        onend: ()=>this.setState({atts})
+      },
+      {decodeEntities: true});
     parser.write(domContent);
     parser.end();
   };
@@ -49,9 +50,7 @@ export default class App extends Component {
 
   doStuff = ()=> {
     try {
-      this.log('ta', {x: 2});
       this.setState(oldState=> ({x: oldState.x + 1}));
-
 
       chrome.tabs.query({currentWindow: true, active: true}, (tabs)=> {
         this.log(tabs[0].url);
@@ -76,11 +75,7 @@ export default class App extends Component {
         <div style={{padding: '2rem', backgroundColor: 'pink', cursor: 'pointer', color: 'white'}}
              onClick={this.doStuff}>DO STUFF
         </div>
-        <div>{this.state.x}</div>
-        {/*<Header addTodo={actions.addTodo} />
-         <MainSection todos={todos} actions={actions} />*/}
-        GET QOUTES AND STUFF HEREjjjj;;;;;
-        {this.state.tab}
+        <Quotes atts={this.state.atts}/>
       </div>
     );
   }

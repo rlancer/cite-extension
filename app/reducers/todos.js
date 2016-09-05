@@ -22,14 +22,14 @@ const actionsMap = {
   [ActionTypes.EDIT_TODO](state, action) {
     return state.map(todo =>
       (todo.id === action.id ?
-        Object.assign({}, todo, { text: action.text }) :
+        Object.assign({}, todo, {text: action.text}) :
         todo)
     );
   },
   [ActionTypes.COMPLETE_TODO](state, action) {
     return state.map(todo =>
       (todo.id === action.id ?
-        Object.assign({}, todo, { completed: !todo.completed }) :
+        Object.assign({}, todo, {completed: !todo.completed}) :
         todo)
     );
   },
