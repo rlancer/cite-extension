@@ -18,7 +18,7 @@ export default class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {x: 1};
+    this.state = {atts: false};
   }
 
   static propTypes = {
@@ -35,7 +35,10 @@ export default class App extends Component {
             if (attribs.name || attribs.property)
               atts[attribs.name || attribs.property] = attribs.content;
         },
-        onend: ()=>this.setState({atts})
+        onend: ()=> {
+          this.log(atts);
+          this.setState({atts});
+        }
       },
       {decodeEntities: true});
     parser.write(domContent);
@@ -66,16 +69,15 @@ export default class App extends Component {
     }
   };
 
-
   render() {
-    const {todos, actions} = this.props;
+    const
+      {todos, actions} = this.props,
+      {atts} = this.state;
 
     return (
-      <div style={{backgroundColor: 'red', height: '20rem'}}>
-        <div style={{padding: '2rem', backgroundColor: 'pink', cursor: 'pointer', color: 'white'}}
-             onClick={this.doStuff}>DO STUFF
-        </div>
-        <Quotes atts={this.state.atts}/>
+      <div style={{height: '20rem'}}>
+        <div style={{padding: '2rem', backgroundColor: '#fff', cursor: 'pointer'}} onClick={this.doStuff}>DO STUFF</div>
+        {atts ? <Quotes atts={this.state.atts}/> : false}
       </div>
     );
   }

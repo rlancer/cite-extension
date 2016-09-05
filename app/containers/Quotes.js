@@ -40,9 +40,36 @@ export default class Quotes extends Component {
     chrome.extension.getBackgroundPage().console.log(object);
   }
 
+  get atts() {
+    return this.props.atts;
+  }
+
+  get author() {
+    return this.atts.author || this.atts['article:author'] || '';
+  }
+
+  get date() {
+    return this.atts.pubdate || this.atts['og:pubdate'];
+  }
+
+  get title() {
+    return this.atts['og:title'];
+  }
+
+  get url() {
+    return this.atts['og:url'];
+  }
+
+  /*
+   A periodical (journal, magazine, newspaper article) should be in quotation marks:
+
+   Bagchi, Alaknanda. "Conflicting Nationalisms: The Voice of the Subaltern in Mahasweta Devi's Bashai Tudu." Tulsa Studies in Women's Literature, vol. 15, no. 1, 1996, pp. 41-50.
+   */
   render() {
     return (
-      <div>{JSON.stringify(this.props.atts)}</div>
+      <div style={{fontFamily: 'courier'}}>
+        {this.author.split(' ').reverse().join(', ')}. "{this.title}", {this.date}, {this.url}.
+      </div>
     );
   }
 }
