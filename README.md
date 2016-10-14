@@ -4,7 +4,20 @@
 
 https://www.collaborizm.com/project/273~
 
+
+
 ## Development
+
+Download latest LTS node version from https://nodejs.org 
+
+Open a new terminal window
+
+Clone the repo 
+git clone git@github.com:rlancer/cite-extension.git
+cd cite-extension 
+npm i
+ 
+
 
 * Run script
 ```bash
