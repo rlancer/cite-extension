@@ -8,10 +8,8 @@ https://www.collaborizm.com/project/273~
 
 ## Development
 
-Download latest LTS node version from https://nodejs.org 
-
-Open a new terminal window
-
+* Download latest LTS node version from https://nodejs.org 
+* Open a new terminal window
 
 ```bash
 # Clone the repo 
