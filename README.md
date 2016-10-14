@@ -12,12 +12,15 @@ Download latest LTS node version from https://nodejs.org
 
 Open a new terminal window
 
-Clone the repo 
-git clone git@github.com:rlancer/cite-extension.git
-cd cite-extension 
-npm i
- 
 
+```bash
+# Clone the repo 
+git clone git@github.com:rlancer/cite-extension.git
+# Change to the cite-extention directory 
+cd cite-extension 
+# Install npm packages 
+npm i
+```
 
 * Run script
 ```bash
