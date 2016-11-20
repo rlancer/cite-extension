@@ -1,3 +1,25 @@
+//
+//                       _oo0oo_
+//                      o8888888o
+//                      88" . "88
+//                      (| -_- |)
+//                      0\  =  /0
+//                    ___/`---'\___
+//                  .' \\|     |// '.
+//                 / \\|||  :  |||// \
+//                / _||||| -:- |||||- \
+//               |   | \\\  -  /// |   |
+//               | \_|  ''\---/''  |_/ |
+//               \  .-\__  '-'  ___/-. /
+//             ___'. .'  /--.--\  `. .'___
+//          ."" '<  `.___\_<|>_/___.' >' "".
+//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+//         \  \ `_.   \_ __\ /__ _/   .-` /  /
+//     =====`-.____`.___ \_____/___.-`___.-'=====
+//                       `=---='
+//
+//					 BUG FREE BUDDHA
+
 import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -59,16 +81,119 @@ export default class Quotes extends Component {
   get url() {
     return this.atts['og:url'];
   }
-
+  
+  
+	get APA_author(){
+		var names = this.author.split(' ');
+		if	(names.length == 0)
+			return this.author;
+			
+		var s_name = names[names.length - 1];		
+		var f_name = names[0];
+		
+		if(f_name.length > 0)
+			f_name = f_name.charAt(0).toUpperCase();
+		
+		return s_name + ", " + f_name;
+	}
+	
+	get MLA_author(){
+		var names = this.author.split(' ');
+		if	(names.length == 0)
+			return this.author;
+			
+		var s_name = names[names.length - 1];		
+		var f_name = names[0];
+		
+		return s_name + ", " + f_name;
+	}
+	
+	
+	get common_year(){
+		var moment = require('moment');
+		
+		if (!moment().isValid(this.date))
+			return this.date;
+			
+		return moment(this.date).year();
+	}
+	
+	get common_date(){
+		var moment = require('moment');
+		
+		if (!moment().isValid(this.date))
+			return this.date;
+			
+		return moment(this.date).format("MMM. D, YYYY");
+	}
+	
+	get MLA_site_name(){
+		if(this.atts["og:site_name"])
+			return this.atts["og:site_name"].trim();
+			
+		if(this.atts["site_title"]){
+			var title = this.atts["site_title"];
+			
+			var title_parts = title.split("-");
+			
+			if(title_parts.length > 1)
+				return title_parts[title_parts.length - 1].trim();
+		}	
+	
+		if(this.atts['og:url']){
+			var URL = require("url");
+			var url_obj = URL.parse(this.atts['og:url']);
+			if(url_obj)
+				return url_obj.protocol + "//" + url_obj.host;
+		}
+		
+		return "";
+	}
+	
+	get common_URL(){
+		if(this.atts["site_short_url"])
+			return this.atts["site_short_url"];
+			
+		return this.url;
+	}
+  
+	get self_error(){
+		if(this.atts["self_error"])
+			return "<b>" + this.atts["self_error"] + "</b><br/><br/>";
+	}
+  
   /*
    A periodical (journal, magazine, newspaper article) should be in quotation marks:
 
    Bagchi, Alaknanda. "Conflicting Nationalisms: The Voice of the Subaltern in Mahasweta Devi's Bashai Tudu." Tulsa Studies in Women's Literature, vol. 15, no. 1, 1996, pp. 41-50.
+   
+	
+	Extension Spits out:
+	Cohn, Nate. “Latest Upshot Poll Shows Trump With a Lead in Florida”, ,http://www.nytimes.com/interactive/2016/10/30/upshot/florida-poll.html.
+	
+	We need it to spit out (APA):
+	Cohen, N. (2016) Latest Upshot Poll Shows Trump With a Lead in Florida Retrieved Oct. 30, 2016 from http://nyti.ms/2e11Njq
+
+	We need it to spit out (MLA):
+	Cohen, Nate, (2016) ”Latest Upshot Poll Shows Trump With a Lead in Florida" The New York Times, Oct. 30, 2016. http://nyti.ms/2e11Njq
+   
+   
    */
   render() {
     return (
       <div style={{fontFamily: 'courier'}}>
-        {this.author.split(' ').reverse().join(', ')}. "{this.title}", {this.date}, {this.url}.
+		{this.self_error}
+	  
+        Original:<br/> 
+		{this.author.split(' ').reverse().join(', ')}. "{this.title}", {this.date}, {this.url}.
+		
+		<br/> <br/> 
+		APA:<br/> 
+		{this.APA_author}. ({this.common_year}) {this.title} Retrieved {this.common_date} from {this.common_URL}
+		
+		<br/> <br/> 
+		MLA:<br/> 
+		{this.MLA_author}, ({this.common_year}) "{this.title}" {this.MLA_site_name}, {this.common_date}. {this.common_URL}
       </div>
     );
   }
