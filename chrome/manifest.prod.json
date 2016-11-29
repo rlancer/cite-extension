@@ -1,8 +1,8 @@
 {
   "version": "0.0.0",
-  "name": "react-chrome-extension-example",
+  "name": "Cite Share",
   "manifest_version": 2,
-  "description": "Example for react-chrome-extension-boilerplate",
+  "description": "Properly cite a website using APA or MLA with the click of a button. Track and share citations used with others.",
   "browser_action": {
     "default_title": "React Chrome Extension Example",
     "default_popup": "popup.html"
@@ -25,6 +25,5 @@
     "storage",
     "https://github.com/*"
   ],
-
   "content_security_policy": "default-src 'self'; script-src 'self' 'unsafe-eval'; object-src 'self' style-src * 'unsafe-inline'; img-src 'self' data:;"
 }

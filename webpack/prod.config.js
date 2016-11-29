@@ -6,7 +6,6 @@ module.exports = {
   entry: {
     todoapp: [customPath, path.join(__dirname, '../chrome/extension/todoapp')],
     background: [customPath, path.join(__dirname, '../chrome/extension/background')],
-    inject: [customPath, path.join(__dirname, '../chrome/extension/inject')]
   },
   output: {
     path: path.join(__dirname, '../build/js'),
@@ -33,17 +32,19 @@ module.exports = {
     extensions: ['', '.js']
   },
   module: {
-    loaders: [{
-      test: /\.js$/,
-      loader: 'babel',
-      exclude: /node_modules/
-    }, {
-      test: /\.css$/,
-      loaders: [
-        'style',
-        'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-        'postcss'
-      ]
-    }]
+    loaders: [
+      {test: /\.json/, loader: "json"},
+      {
+        test: /\.js$/,
+        loader: 'babel',
+        exclude: /node_modules/
+      }, {
+        test: /\.css$/,
+        loaders: [
+          'style',
+          'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'postcss'
+        ]
+      }]
   }
 };
