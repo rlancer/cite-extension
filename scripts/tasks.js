@@ -19,5 +19,7 @@ exports.copyAssets = type => {
   cp(`chrome/extension/content.js`, `${type}/content.js`);
   cp(`chrome/manifest.${env}.json`, `${type}/manifest.json`);
   cp('-R', 'chrome/assets/*', type);
+  mkdir(`${type}/css/`);
+  cp('-R', 'chrome/css/*', `${type}/css/`);
   exec(`jade -O "{ env: '${env}' }" -o ${type} chrome/views/`);
 };

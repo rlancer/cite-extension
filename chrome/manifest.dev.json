@@ -26,8 +26,8 @@
     "contextMenus",
     "management",
     "tabs",
-    "storage",
-    "https://github.com/*"
+    "activeTab",
+    "storage"
   ],
   "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; object-src 'self'; connect-src http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
 }

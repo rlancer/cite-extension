@@ -52,35 +52,35 @@ const x = {
 
 export default class Quotes extends Component {
 
-  constructor(props) {
-    super(props);
-  }
+    constructor(props) {
+        super(props);
+    }
 
 
-  log(object) {
-    console.log('log', object);
-    chrome.extension.getBackgroundPage().console.log(object);
-  }
+    log(object) {
+        console.log('log', object);
+        chrome.extension.getBackgroundPage().console.log(object);
+    }
 
-  get atts() {
-    return this.props.atts;
-  }
+    get atts() {
+        return this.props.atts;
+    }
 
-  get author() {
-    return this.atts.author || this.atts['article:author'] || '';
-  }
+    get author() {
+        return this.atts.author || this.atts['article:author'] || '';
+    }
 
-  get date() {
-    return this.atts.pubdate || this.atts['og:pubdate'];
-  }
+    get date() {
+        return this.atts.pubdate || this.atts['og:pubdate'];
+    }
 
-  get title() {
-    return this.atts['og:title'];
-  }
+    get title() {
+        return this.atts['og:title'];
+    }
 
-  get url() {
-    return this.atts['og:url'];
-  }
+    get url() {
+        return this.atts['og:url'];
+    }
   
   
 	get APA_author(){
@@ -158,14 +158,37 @@ export default class Quotes extends Component {
 	}
   
 	get self_error(){
-		if(this.atts["self_error"])
-			return "<b>" + this.atts["self_error"] + "</b><br/><br/>";
+		if(this.atts["self_error"]){
+			return (
+                <div>
+                    <b>{this.atts["self_error"]}</b>
+                    <br/><br/>
+                </div>
+            );
+        }
 	}
+    
+    get citation_jsx(){
+        return(
+            <div>
+                Original:<br/> 
+                {this.author.split(' ').reverse().join(', ')}. "{this.title}", {this.date}, {this.url}.
+            
+                <br/> <br/> 
+                APA:<br/> 
+                {this.APA_author}. ({this.common_year}) {this.title} Retrieved {this.common_date} from {this.common_URL}
+            
+                <br/> <br/> 
+                MLA:<br/> 
+                {this.MLA_author}, ({this.common_year}) "{this.title}" {this.MLA_site_name}, {this.common_date}. {this.common_URL}
+            </div>
+        );
+    }
   
-  /*
-   A periodical (journal, magazine, newspaper article) should be in quotation marks:
+    /*
+    A periodical (journal, magazine, newspaper article) should be in quotation marks:
 
-   Bagchi, Alaknanda. "Conflicting Nationalisms: The Voice of the Subaltern in Mahasweta Devi's Bashai Tudu." Tulsa Studies in Women's Literature, vol. 15, no. 1, 1996, pp. 41-50.
+    Bagchi, Alaknanda. "Conflicting Nationalisms: The Voice of the Subaltern in Mahasweta Devi's Bashai Tudu." Tulsa Studies in Women's Literature, vol. 15, no. 1, 1996, pp. 41-50.
    
 	
 	Extension Spits out:
@@ -179,22 +202,18 @@ export default class Quotes extends Component {
    
    
    */
-  render() {
-    return (
-      <div style={{fontFamily: 'courier'}}>
-		{this.self_error}
-	  
-        Original:<br/> 
-		{this.author.split(' ').reverse().join(', ')}. "{this.title}", {this.date}, {this.url}.
-		
-		<br/> <br/> 
-		APA:<br/> 
-		{this.APA_author}. ({this.common_year}) {this.title} Retrieved {this.common_date} from {this.common_URL}
-		
-		<br/> <br/> 
-		MLA:<br/> 
-		{this.MLA_author}, ({this.common_year}) "{this.title}" {this.MLA_site_name}, {this.common_date}. {this.common_URL}
-      </div>
-    );
-  }
+    render() {     
+        let dom = null;
+        
+        if (this.self_error)
+            dom = this.self_error;
+        else
+            dom = this.citation_jsx;
+    
+        return (
+            <div style={{fontFamily: 'courier'}}>
+                {dom}
+            </div>
+        );
+    }
 }
