@@ -5,10 +5,19 @@ html
     meta(charset='UTF-8')
     title Redux TodoMVC Example (Popup)
     link(href='/css/popup.css', rel='stylesheet')
-   
-   
+    
+    link(href='/css/material-icons.css', rel='stylesheet')
+    link(href='/css/roboto.css', rel='stylesheet')
+    
+    
+    
+    
+    
+    
   body
     #root
     if env !== 'prod'
-      script(src='chrome-extension://lmhkpmbekcpmknklioeibfkpmmfibljd/js/inject.bundle.js')
+      script(src='chrome-extension://lmhkpmbekcpmknklioeibfkpmmfibljd/js/redux-devtools-extension.js')
+      //script(src='chrome-extension://lmhkpmbekcpmknklioeibfkpmmfibljd/js/inject.bundle.js')
     script(src=env == 'prod' ? '/js/todoapp.bundle.js' : 'http://localhost:3000/js/todoapp.bundle.js')
+    script(src='/popup.js')

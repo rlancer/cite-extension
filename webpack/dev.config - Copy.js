@@ -1,7 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const autoprefixer = require('autoprefixer');
+//const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const host = 'localhost';
 const port = 3000;
@@ -30,7 +31,6 @@ const baseDevConfig = () => ({
     chunkFilename: '[id].chunk.js'
   },
   plugins: [
-    new ExtractTextPlugin('bundle.css', { allChunks: true }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.IgnorePlugin(/[^/]+\/[\S]+.prod$/),
@@ -43,10 +43,10 @@ const baseDevConfig = () => ({
     })
   ],
   resolve: {
-    extensions: ['', '.jsx', '.scss', '.js', '.json'], 
+    extensions: ['', '.scss', '.css', '.js', '.json'],
     modulesDirectories: [
-        'node_modules',
-        path.resolve(__dirname, './node_modules')                                                                                                                               
+      'node_modules',
+      path.resolve(__dirname, './node_modules')
     ]
   },
   module: {
@@ -59,21 +59,32 @@ const baseDevConfig = () => ({
         query: {
           presets: ['react-hmre']
         }
-      },
-
+      }, 
       {
-        test: /(\.scss|\.css)$/,       
+        test: /(\.scss|\.css)$/,
         loaders: [
           'style',
           'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
-          'postcss',
           'sass'
         ]
-        
+      },
+      /*
+      {
+        test: /\.css$/,
+        loaders: [
+          'style',
+          'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'postcss'
+        ]
+      },
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass')
       }
-
-    ]
-  }
+      */
+      ]
+  },
+  postcss: [autoprefixer]
 });
 
 const injectPageConfig = baseDevConfig();

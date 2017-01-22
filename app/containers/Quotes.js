@@ -27,6 +27,11 @@ import * as TodoActions from '../actions/todos';
 import style from './App.css';
 import htmlparser2 from 'htmlparser2';
 
+import { Layout, Panel, Button, Link, Snackbar } from 'react-toolbox';
+import { Card, CardMedia, CardTitle, CardText, CardActions } from 'react-toolbox/lib/card';
+
+import CopyToClipboard from 'react-copy-to-clipboard';
+
 const x = {
   "viewport": "width=device-width, initial-scale=1.0, minimum-scale=1.0",
   "section": "asia",
@@ -54,8 +59,12 @@ export default class Quotes extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            copyApa: false,
+            copyMla: false,
+            noQuoteShown: false
+        };
     }
-
 
     log(object) {
         console.log('log', object);
@@ -82,6 +91,10 @@ export default class Quotes extends Component {
         return this.atts['og:url'];
     }
   
+    get can_generate_cite(){
+        return (this.APA_author && this.common_year && this.title && this.common_URL);
+        //return true;
+    }
   
 	get APA_author(){
 		var names = this.author.split(' ');
@@ -157,34 +170,207 @@ export default class Quotes extends Component {
 		return this.url;
 	}
   
-	get self_error(){
-		if(this.atts["self_error"]){
-			return (
-                <div>
-                    <b>{this.atts["self_error"]}</b>
-                    <br/><br/>
-                </div>
-            );
-        }
+	get dom_error(){
+		return this.atts["dom_error"];
 	}
     
-    get citation_jsx(){
+    get selection(){
+        return this.atts['selection'];
+    }
+    
+    get selected_quote() {
+        var quote = this.selection;
+    
+        if(!quote)
+            return "";
+            
+        quote = quote.trim();    
+           
+        if(quote.length > 0 && quote.indexOf('"') > 0)
+            return quote;
+    
+        return '"' + quote + '"';
+    }
+
+    
+    
+    get jsx_no_dom(){
+        return(
+            <Panel>
+            
+                <Card className="cite-card-2">
+                    <span className="cite-card-title"> Could not access web page contents. </span>
+                    
+                    <CardText className="cite-error-cardtext">
+                        <p className="cite-cardtext-text">  
+                            <br/>
+                            Either the page is a special page like Settings, or the page was loaded before CiteShare was initialized. <br/><br/>
+                            Please reload the page and try again. 
+                        </p>
+                    </CardText>
+                    
+                </Card>
+                
+            </Panel>
+
+        );
+    }
+    
+    get jsx_no_citation(){
+        return(
+            <Panel>
+            
+                <Card className="cite-card-2">
+                    <span className="cite-card-title"> Could not generate citation. </span>
+                    
+                    <CardText className="cite-error-cardtext">
+                        <p className="cite-cardtext-text">  
+                            <br/>
+                            No OpenGraph metadata fields have been found on this page. <br/><br/>
+                            Please contact the owners of the web site to make it compatible with CiteShare.
+                        </p>
+                    </CardText>
+                    
+                </Card>
+                
+            </Panel>
+
+        );
+    }
+    
+    get jsx_citation(){
+        return(
+            <Panel>
+                <Card className="cite-card">
+                    <span className="cite-card-title"> APA </span>
+                    
+                    <CardText className="cite-cardtext">{this.jsx_apa}</CardText>
+                    
+                    <CardActions>
+                        <CopyToClipboard text={this.copy_apa} onCopy={this.onCopyApa}>
+                            <Button className="cite-card-button" label="Copy" raised primary/>
+                        </CopyToClipboard>
+                    </CardActions>
+                </Card>
+                
+                
+                <Card className="cite-card-2">
+                    <span className="cite-card-title"> MLA </span>
+                    
+                    <CardText className="cite-cardtext">{this.jsx_mla}</CardText>
+                    
+                    <CardActions>
+                        <CopyToClipboard text={this.copy_mla} onCopy={this.onCopyMla}>
+                            <Button className="cite-card-button" label="Copy" raised primary/>
+                        </CopyToClipboard>
+                    </CardActions>
+                </Card>
+                
+                <Snackbar action='OK' active={this.shouldShowSnackbar} label={this.getSnackbarMsg}
+                    timeout={1000} onClick={this.handleSnackbarDismiss} onTimeout={this.handleSnackbarDismiss} type='accept'/>
+            </Panel>
+        );
+    }
+    
+    get jsx_original(){
         return(
             <div>
-                Original:<br/> 
+                <b>Original:</b><br/> 
                 {this.author.split(' ').reverse().join(', ')}. "{this.title}", {this.date}, {this.url}.
-            
-                <br/> <br/> 
-                APA:<br/> 
-                {this.APA_author}. ({this.common_year}) {this.title} Retrieved {this.common_date} from {this.common_URL}
-            
-                <br/> <br/> 
-                MLA:<br/> 
-                {this.MLA_author}, ({this.common_year}) "{this.title}" {this.MLA_site_name}, {this.common_date}. {this.common_URL}
             </div>
         );
     }
-  
+    
+    
+    get jsx_apa(){
+        let quote = this.selected_quote;
+        quote = (quote.length > 0 ? (<span>{quote} <br/><br/></span>) : "");
+    
+        return(
+            <p className="cite-cardtext-text">  
+                {/*{this.APA_author}. ({this.common_year}). {this.title}. Retrieved {this.common_date} from {this.common_URL}*/}
+                {quote}
+                {this.raw_apa}
+            </p>
+        );
+    }
+    
+    get copy_apa(){
+        var quote = this.selected_quote;
+        quote = (quote.length > 0 ? quote + "\n\n" : "");
+        
+        return (`${quote}${this.raw_apa}`);
+    }
+    
+    get raw_apa(){
+        return (`${this.APA_author}. (${this.common_year}). ${this.title}. Retrieved ${this.common_date} from ${this.common_URL}`);
+    }
+    
+    
+    
+    get jsx_mla(){
+        let quote = this.selected_quote;
+        quote = (quote.length > 0 ? (<span>{quote} <br/><br/></span>) : "");
+    
+        return(
+            <p className="cite-cardtext-text">
+                {/*{this.MLA_author}, ({this.common_year}) "{this.title}" {this.MLA_site_name}, {this.common_date}. {this.common_URL}*/}
+                {quote}
+                {this.raw_mla}
+            </p>
+        );
+    }
+    
+    get copy_mla(){
+        var quote = this.selected_quote;
+        quote = (quote.length > 0 ? quote + "\n\n" : "");
+        
+        return (`${quote}${this.raw_mla}`);
+    }
+    
+    get raw_mla(){
+        return(`${this.MLA_author}, (${this.common_year}) "${this.title}" ${this.MLA_site_name}, ${this.common_date}. ${this.common_URL}`);
+    }
+    
+    
+    get shouldShowSnackbar(){
+        return this.state.copyApa || this.state.copyMla || (!this.state.noQuoteShown && !this.selection);
+    }
+    
+    
+    get getSnackbarMsg(){
+        if(this.state.copyApa || this.state.copyMla){
+            if (this.state.copyApa){
+                return "APA citation copied.";
+            }else if (this.state.copyMla){
+                return "MLA citation copied.";
+            }
+        }else if (!this.state.noQuoteShown && !this.selection){
+            return "To add a quote, select text before loading CiteShare";
+        }else{
+            return "";
+        }
+    }
+    
+    onCopyApa = ()=> {
+        //alert("APA copied");
+        this.setState({copyApa: true});
+    }
+     
+    onCopyMla = ()=> {
+        //alert("MLA copied");
+        this.setState({copyMla: true});
+    } 
+    
+    handleSnackbarDismiss = (event, instance) => {
+        this.setState({ 
+            copyApa: false,
+            copyMla: false,
+            noQuoteShown: true
+        });
+    };
+    
+    
     /*
     A periodical (journal, magazine, newspaper article) should be in quotation marks:
 
@@ -195,23 +381,32 @@ export default class Quotes extends Component {
 	Cohn, Nate. “Latest Upshot Poll Shows Trump With a Lead in Florida”, ,http://www.nytimes.com/interactive/2016/10/30/upshot/florida-poll.html.
 	
 	We need it to spit out (APA):
-	Cohen, N. (2016) Latest Upshot Poll Shows Trump With a Lead in Florida Retrieved Oct. 30, 2016 from http://nyti.ms/2e11Njq
+	Cohen, N. (2016). Latest Upshot Poll Shows Trump With a Lead in Florida. Retrieved Oct. 30, 2016 from http://nyti.ms/2e11Njq
 
 	We need it to spit out (MLA):
 	Cohen, Nate, (2016) ”Latest Upshot Poll Shows Trump With a Lead in Florida" The New York Times, Oct. 30, 2016. http://nyti.ms/2e11Njq
    
-   
    */
+   
+   
     render() {     
         let dom = null;
         
-        if (this.self_error)
-            dom = this.self_error;
-        else
-            dom = this.citation_jsx;
-    
+        if(this.state.genDom){
+            dom = this.state.genDom;
+        
+        }
+        
+        if (this.dom_error){
+            dom = this.jsx_no_dom;
+        }else if(!this.can_generate_cite){
+            dom = this.jsx_no_citation;
+        }else{
+            dom = this.jsx_citation;
+        }
+            
         return (
-            <div style={{fontFamily: 'courier'}}>
+            <div>
                 {dom}
             </div>
         );

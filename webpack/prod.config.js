@@ -29,7 +29,11 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.jsx', '.scss', '.js', '.json'], 
+    modulesDirectories: [
+        'node_modules',
+        path.resolve(__dirname, './node_modules')                                                                                                                               
+    ]
   },
   module: {
     loaders: [
@@ -38,13 +42,24 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel',
         exclude: /node_modules/
-      }, {
+      }, 
+      /*{
         test: /\.css$/,
         loaders: [
           'style',
           'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
           'postcss'
         ]
+      }*/
+      {
+        test: /(\.scss|\.css)$/,       
+        loaders: [
+          'style',
+          'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'postcss',
+          'sass'
+        ]
+        
       }]
   }
 };

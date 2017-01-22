@@ -1,1 +1,60 @@
-body { width: 500px; }
+body 
+{ 
+    width: 600px; 
+}
+
+.app-icon
+{
+    vertical-align: middle;
+    /* margin-left: -10px; */
+}
+
+.cite-cardtext-text
+{
+    font-size: 17px;
+    margin: 0px;
+}
+
+.cite-cardtext
+{
+    padding: 0px 15px 0px 15px !important;
+    line-height: 1.3rem !important;
+}
+
+.cite-error-cardtext
+{
+    padding: 0px 15px 15px 15px !important;
+    line-height: 1.3rem !important;
+}
+
+.cite-card
+{
+    margin-bottom: 20px !important;
+}
+
+.cite-card-2
+{
+    margin-bottom: 7px !important;
+}
+
+.cite-card-title
+{
+    margin: 15px !important;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+
+.cite-card-subtitle
+{
+    margin-top: 3px !important;
+    margin-bottom: 8px !important;
+    font-size: 22px;
+}
+
+.cite-card-button
+{
+    font-size: 15px !important;
+    line-height: 2rem !important;
+    height: 2rem !important;
+}

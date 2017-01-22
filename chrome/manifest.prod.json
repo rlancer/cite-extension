@@ -1,6 +1,6 @@
 {
   "version": "0.0.0",
-  "name": "Cite Share",
+  "name": "CiteShare",
   "manifest_version": 2,
   "description": "Properly cite a website using APA or MLA with the click of a button. Track and share citations used with others.",
   "browser_action": {

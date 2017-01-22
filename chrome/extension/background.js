@@ -1,3 +1,26 @@
+/*
+chrome.contextMenus.create({
+    id: "citeshare_cx_menu",
+    title: "Cite selected text using CiteShare", 
+    contexts:["selection"], 
+    onclick: getSelection
+});
+
+getSelection = (info, tab) => {
+    this.log("Word " + info.selectionText + " was clicked.");
+    
+    chrome.tabs.create({  
+        url: "chrome-extension://gldpenmgobgklgabnopjpededfgmckjm/popup.js" + info.selectionText,
+    });  
+};
+
+log = (object) => {
+    console.log('background.js', object);
+    //chrome.extension.getBackgroundPage().console.log('content.js: ' + object);
+};
+*/
+
+/*
 const bluebird = require('bluebird');
 global.Promise = bluebird;
 
@@ -29,4 +52,5 @@ promisifyAll(chrome.storage, [
 
 require('./background/contextMenus');
 require('./background/inject');
+*/
 

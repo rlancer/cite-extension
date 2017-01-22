@@ -16,7 +16,9 @@ exports.copyAssets = type => {
   const env = type === 'build' ? 'prod' : type;
   rm('-rf', type);
   mkdir(type);
+  cp(`chrome/extension/background.js`, `${type}/background.js`);
   cp(`chrome/extension/content.js`, `${type}/content.js`);
+  cp(`chrome/extension/popup.js`, `${type}/popup.js`);
   cp(`chrome/manifest.${env}.json`, `${type}/manifest.json`);
   cp('-R', 'chrome/assets/*', type);
   mkdir(`${type}/css/`);
